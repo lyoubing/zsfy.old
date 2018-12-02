@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service.Inpatient", "Analysis.Service.Inpatient\Analysis.Service.Inpatient.csproj", "{001A40C5-2F03-47CE-8466-A35289266421}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Work.Execute", "Analysis.Work.Execute\Analysis.Work.Execute.csproj", "{1FCDA427-3AA3-4A6E-A668-0B70286AD9F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalysisModel", "AnalysisModel\AnalysisModel.csproj", "{95357765-75F0-4BF5-A192-E9559DFE80C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalysisToolKit", "AnalysisToolKit\AnalysisToolKit.csproj", "{71C8EB59-3AA1-497F-8424-CD558CF5DA30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalysisWork", "AnalysisWork\AnalysisWork.csproj", "{A19C9355-1DB5-40CE-B89E-9640DA6DDD30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service", "Analysis.Service\Analysis.Service.csproj", "{DDEA1177-2D81-4E40-BDD4-697D62F6E1C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service.InpatientPay", "Analysis.Service.InpatientPay\Analysis.Service.InpatientPay.csproj", "{86421A64-C16B-4F54-AE00-411EBF73D233}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{001A40C5-2F03-47CE-8466-A35289266421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{001A40C5-2F03-47CE-8466-A35289266421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{001A40C5-2F03-47CE-8466-A35289266421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{001A40C5-2F03-47CE-8466-A35289266421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FCDA427-3AA3-4A6E-A668-0B70286AD9F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FCDA427-3AA3-4A6E-A668-0B70286AD9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FCDA427-3AA3-4A6E-A668-0B70286AD9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FCDA427-3AA3-4A6E-A668-0B70286AD9F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95357765-75F0-4BF5-A192-E9559DFE80C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95357765-75F0-4BF5-A192-E9559DFE80C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95357765-75F0-4BF5-A192-E9559DFE80C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95357765-75F0-4BF5-A192-E9559DFE80C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71C8EB59-3AA1-497F-8424-CD558CF5DA30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71C8EB59-3AA1-497F-8424-CD558CF5DA30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71C8EB59-3AA1-497F-8424-CD558CF5DA30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71C8EB59-3AA1-497F-8424-CD558CF5DA30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19C9355-1DB5-40CE-B89E-9640DA6DDD30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19C9355-1DB5-40CE-B89E-9640DA6DDD30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19C9355-1DB5-40CE-B89E-9640DA6DDD30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19C9355-1DB5-40CE-B89E-9640DA6DDD30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDEA1177-2D81-4E40-BDD4-697D62F6E1C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDEA1177-2D81-4E40-BDD4-697D62F6E1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDEA1177-2D81-4E40-BDD4-697D62F6E1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDEA1177-2D81-4E40-BDD4-697D62F6E1C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86421A64-C16B-4F54-AE00-411EBF73D233}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86421A64-C16B-4F54-AE00-411EBF73D233}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86421A64-C16B-4F54-AE00-411EBF73D233}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86421A64-C16B-4F54-AE00-411EBF73D233}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

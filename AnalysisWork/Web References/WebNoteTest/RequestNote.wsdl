@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.gzsums.net/requisition/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="RequestNote" targetNamespace="http://www.gzsums.net/requisition/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://www.gzsums.net/requisition/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="RequisitionAdd">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RequisitionAddResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="RequisitionAddResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RequisitionFind">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RequisitionFindResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="RequisitionFindResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RequisitionPayInfo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RequisitionPayInfoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="RequisitionPayInfoResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RisReservationReceive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RisReservationReceiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="RisReservationReceiveResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="request" type="tns:Request" />
+      <xs:complexType name="Request">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="requestHeader" type="tns:RequestHeader" />
+          <xs:element minOccurs="0" name="requestBody" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="sender" type="xs:string" />
+          <xs:element minOccurs="0" name="receiver" type="xs:string" />
+          <xs:element minOccurs="0" name="requestTime" type="xs:string" />
+          <xs:element minOccurs="0" name="msgType" type="xs:string" />
+          <xs:element minOccurs="0" name="msgId" type="xs:string" />
+          <xs:element minOccurs="0" name="msgPriority" type="xs:string" />
+          <xs:element minOccurs="0" name="msgVersion" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="responseHeader" type="tns:ResponseHeader" />
+          <xs:element minOccurs="0" name="responseBody" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ResponseHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="sender" type="xs:string" />
+          <xs:element minOccurs="0" name="receiver" type="xs:string" />
+          <xs:element minOccurs="0" name="requestTime" type="xs:string" />
+          <xs:element minOccurs="0" name="msgType" type="xs:string" />
+          <xs:element minOccurs="0" name="msgId" type="xs:string" />
+          <xs:element minOccurs="0" name="msgPriority" type="xs:string" />
+          <xs:element minOccurs="0" name="msgVersion" type="xs:string" />
+          <xs:element minOccurs="0" name="errCode" type="xs:string" />
+          <xs:element minOccurs="0" name="errMessage" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="RisReservationReceiveResponse">
+    <wsdl:part name="parameters" element="tns:RisReservationReceiveResponse" />
+  </wsdl:message>
+  <wsdl:message name="RequisitionPayInfo">
+    <wsdl:part name="parameters" element="tns:RequisitionPayInfo" />
+  </wsdl:message>
+  <wsdl:message name="RequisitionFind">
+    <wsdl:part name="parameters" element="tns:RequisitionFind" />
+  </wsdl:message>
+  <wsdl:message name="RequisitionAdd">
+    <wsdl:part name="parameters" element="tns:RequisitionAdd" />
+  </wsdl:message>
+  <wsdl:message name="RisReservationReceive">
+    <wsdl:part name="parameters" element="tns:RisReservationReceive" />
+  </wsdl:message>
+  <wsdl:message name="RequisitionPayInfoResponse">
+    <wsdl:part name="parameters" element="tns:RequisitionPayInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="RequisitionFindResponse">
+    <wsdl:part name="parameters" element="tns:RequisitionFindResponse" />
+  </wsdl:message>
+  <wsdl:message name="RequisitionAddResponse">
+    <wsdl:part name="parameters" element="tns:RequisitionAddResponse" />
+  </wsdl:message>
+  <wsdl:portType name="RequestNoteSoap">
+    <wsdl:operation name="RisReservationReceive">
+      <wsdl:input name="RisReservationReceive" message="tns:RisReservationReceive" />
+      <wsdl:output name="RisReservationReceiveResponse" message="tns:RisReservationReceiveResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RequisitionFind">
+      <wsdl:input name="RequisitionFind" message="tns:RequisitionFind" />
+      <wsdl:output name="RequisitionFindResponse" message="tns:RequisitionFindResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RequisitionAdd">
+      <wsdl:input name="RequisitionAdd" message="tns:RequisitionAdd" />
+      <wsdl:output name="RequisitionAddResponse" message="tns:RequisitionAddResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RequisitionPayInfo">
+      <wsdl:input name="RequisitionPayInfo" message="tns:RequisitionPayInfo" />
+      <wsdl:output name="RequisitionPayInfoResponse" message="tns:RequisitionPayInfoResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RequestNoteSoapBinding" type="tns:RequestNoteSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="RisReservationReceive">
+      <soap:operation soapAction="http://www.gzsums.net/requisition/RisReservationReceive" style="document" />
+      <wsdl:input name="RisReservationReceive">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="RisReservationReceiveResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequisitionFind">
+      <soap:operation soapAction="http://www.gzsums.net/requisition/RequisitionFind" style="document" />
+      <wsdl:input name="RequisitionFind">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="RequisitionFindResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequisitionAdd">
+      <soap:operation soapAction="http://www.gzsums.net/requisition/RequisitionAdd" style="document" />
+      <wsdl:input name="RequisitionAdd">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="RequisitionAddResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequisitionPayInfo">
+      <soap:operation soapAction="http://www.gzsums.net/requisition/RequisitionPayInfo" style="document" />
+      <wsdl:input name="RequisitionPayInfo">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="RequisitionPayInfoResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RequestNote">
+    <wsdl:port name="RequestNoteSoap" binding="tns:RequestNoteSoapBinding">
+      <soap:address location="http://168.168.78.105:4463/RequestNote" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

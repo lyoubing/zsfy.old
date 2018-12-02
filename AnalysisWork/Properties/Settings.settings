@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NetScape.AnalysisWork.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AnalysisWork_WebNote_RequestNote" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://168.168.252.111:4463/RequestNote</Value>
+    </Setting>
+    <Setting Name="AnalysisWork_WebNoteTest_RequestNote" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://168.168.78.105:4463/RequestNote</Value>
+    </Setting>
+    <Setting Name="AnalysisWork_MessageNote_MessageService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://168.168.252.112:3385/services/messageOperation</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

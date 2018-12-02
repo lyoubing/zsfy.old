@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.gzsums.net/noticeService/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="MessageService" targetNamespace="http://www.gzsums.net/noticeService/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://www.gzsums.net/noticeService/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="Request" type="tns:Request" />
+      <xs:element name="Response" type="tns:Response" />
+      <xs:element name="messageNotice">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="messageNoticeResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="messageNoticeResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="messageQuery">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="messageQueryResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="messageQueryResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="messageRecieve">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req" type="tns:Request" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="messageRecieveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="messageRecieveResult" type="tns:Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="Request">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="requestHeader" type="tns:RequestHeader" />
+          <xs:element minOccurs="0" name="requestBody" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="sender" type="xs:string" />
+          <xs:element minOccurs="0" name="receiver" type="xs:string" />
+          <xs:element minOccurs="0" name="requestTime" type="xs:string" />
+          <xs:element minOccurs="0" name="msgType" type="xs:string" />
+          <xs:element minOccurs="0" name="msgId" type="xs:string" />
+          <xs:element minOccurs="0" name="msgPriority" type="xs:string" />
+          <xs:element minOccurs="0" name="msgVersion" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="responseHeader" type="tns:ResponseHeader" />
+          <xs:element minOccurs="0" name="responseBody" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ResponseHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="sender" type="xs:string" />
+          <xs:element minOccurs="0" name="receiver" type="xs:string" />
+          <xs:element minOccurs="0" name="requestTime" type="xs:string" />
+          <xs:element minOccurs="0" name="msgType" type="xs:string" />
+          <xs:element minOccurs="0" name="msgId" type="xs:string" />
+          <xs:element minOccurs="0" name="errCode" type="xs:string" />
+          <xs:element minOccurs="0" name="errMessage" type="xs:string" />
+          <xs:element minOccurs="0" name="msgPriority" type="xs:string" />
+          <xs:element minOccurs="0" name="msgVersion" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="messageQuery">
+    <wsdl:part name="parameters" element="tns:messageQuery" />
+  </wsdl:message>
+  <wsdl:message name="messageNoticeResponse">
+    <wsdl:part name="parameters" element="tns:messageNoticeResponse" />
+  </wsdl:message>
+  <wsdl:message name="messageQueryResponse">
+    <wsdl:part name="parameters" element="tns:messageQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="messageRecieve">
+    <wsdl:part name="parameters" element="tns:messageRecieve" />
+  </wsdl:message>
+  <wsdl:message name="messageRecieveResponse">
+    <wsdl:part name="parameters" element="tns:messageRecieveResponse" />
+  </wsdl:message>
+  <wsdl:message name="messageNotice">
+    <wsdl:part name="parameters" element="tns:messageNotice" />
+  </wsdl:message>
+  <wsdl:portType name="MessageServiceSoap">
+    <wsdl:operation name="messageQuery">
+      <wsdl:input name="messageQuery" message="tns:messageQuery" />
+      <wsdl:output name="messageQueryResponse" message="tns:messageQueryResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="messageRecieve">
+      <wsdl:input name="messageRecieve" message="tns:messageRecieve" />
+      <wsdl:output name="messageRecieveResponse" message="tns:messageRecieveResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="messageNotice">
+      <wsdl:input name="messageNotice" message="tns:messageNotice" />
+      <wsdl:output name="messageNoticeResponse" message="tns:messageNoticeResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MessageServiceSoapBinding" type="tns:MessageServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="messageQuery">
+      <soap:operation soapAction="http://www.gzsums.net/noticeService/messageQuery" style="document" />
+      <wsdl:input name="messageQuery">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="messageQueryResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="messageRecieve">
+      <soap:operation soapAction="http://www.gzsums.net/noticeService/messageRecieve" style="document" />
+      <wsdl:input name="messageRecieve">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="messageRecieveResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="messageNotice">
+      <soap:operation soapAction="http://www.gzsums.net/noticeService/messageNotice" style="document" />
+      <wsdl:input name="messageNotice">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="messageNoticeResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MessageService">
+    <wsdl:port name="MessageServiceSoap" binding="tns:MessageServiceSoapBinding">
+      <soap:address location="http://168.168.252.112:3385/services/messageOperation" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
