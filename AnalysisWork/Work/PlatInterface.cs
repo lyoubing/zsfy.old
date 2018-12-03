@@ -1554,7 +1554,7 @@ namespace NetScape.AnalysisWork.Work
                 //Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "order.Patient.ID:" + order.Patient.ID + "||order.Patient.PID.ID:" + order.Patient.PID.ID+"  "+order.Patient.PID.ID.Equals(order.Patient.ID).ToString());
                 if (node.Element("PatientStyle") != null)
                     order.Patient.PatientType = node.Element("PatientStyle").Value.Trim();
-                if (order.Patient.PatientType == "0" || order.Patient.PatientType == "1")
+                if (order.Patient.PatientType == "0" || order.Patient.PatientType == "1" || order.Patient.PatientType  == "3")
                 {
                     if (node.Element("OutHospitalID") != null)
                     {
@@ -1565,13 +1565,6 @@ namespace NetScape.AnalysisWork.Work
                         //order.Patient.PID.PatientNO = node.Element("OutHospitalID").Value.Trim();
                     }
                 }
-                //else if (order.Patient.PatientType == "1")
-                //{
-                //    order.Patient.ID = node.Element("OutHospitalID").Value.Trim();
-                //    order.Patient.PID.CardNO = node.Element("OutHospitalID").Value.Trim();
-                //    // order.Patient.PID.PatientNO = node.Element("OutHospitalID").Value.Trim();
-
-                //}
                 else if (order.Patient.PatientType == "2")
                 {
                     if (node.Element("InHospitalID") != null)
@@ -1583,11 +1576,11 @@ namespace NetScape.AnalysisWork.Work
 
                     if (node.Element("PatientBedNum") != null)
                         order.Patient.BedNO = node.Element("PatientBedNum").Value.Trim();
-                    if (node.Element("PatientAddress") != null)
-                        order.Patient.Address = node.Element("PatientAddress").Value.Trim();
                     // Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, order.Patient.PID.ID);
                     //Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "order.Patient.ID:" + order.Patient.ID + "||order.Patient.PID.ID:" + order.Patient.PID.ID + "  " + order.Patient.PID.ID.Equals(order.Patient.ID).ToString());
                 }
+                if (node.Element("PatientAddress") != null)
+                    order.Patient.Address = node.Element("PatientAddress").Value.Trim();
 
                 if (node.Element("PatientName") != null)
                     order.Patient.Name = node.Element("PatientName").Value.Trim();

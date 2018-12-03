@@ -992,17 +992,7 @@ timestamp'{21}',--22
 
             try
             {
-                NetScape.AnalysisModel.Profile.DomainInfo idenDomain = null;
-                if (patient.PatientType == "0" || patient.PatientType == "1")
-                    idenDomain = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "3").FirstOrDefault();
-                else if (patient.PatientType == "2")
-                {
-                    idenDomain = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "2").FirstOrDefault();
-                }
-                else if (patient.PatientType == "3")
-                {
-                    idenDomain = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "7").FirstOrDefault();
-                }
+                NetScape.AnalysisModel.Profile.DomainInfo idenDomain = GetPatientDomain(patient.PatientType);
 
                 //平台的类别有问题，这里特殊处理一下。修改时候要注意此段
                 string rpPatType = patient.PatientType;
@@ -1405,14 +1395,16 @@ VALUES(DGATE_EXTEND_ID_INFO_SEQUENCE.NextVal,
                 #endregion
 
                 #region 患者流水号
-
-                execSql = string.Format(sql, info.P_Key, p.PID.ID, GetPatientFlowDomain(p.PatientType).ID);
-                result = paltMgr.ExecNoQuery(execSql);
-                if (result == -1)
+                if (!string.IsNullOrEmpty(p.PID.ID))
                 {
-                    this.ErrMsg = "插入报告文档拓展表失败！" + paltMgr.Err + "&&ClinicCode+主键:" + p.PID.ID + "||" + info.P_Key;
-                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, ErrMsg);
-                    return result;
+                    execSql = string.Format(sql, info.P_Key, p.PID.ID, GetPatientFlowDomain(p.PatientType).ID);
+                    result = paltMgr.ExecNoQuery(execSql);
+                    if (result == -1)
+                    {
+                        this.ErrMsg = "插入报告文档拓展表失败！" + paltMgr.Err + "&&ClinicCode+主键:" + p.PID.ID + "||" + info.P_Key;
+                        Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, ErrMsg);
+                        return result;
+                    }
                 }
 
                 #endregion
@@ -2269,7 +2261,7 @@ ORDER BY P.OPERDATE DESC ";
 
                 #region 回写状态通知平台 *****************
                 //旧系统的申请单不回传给平台
-                if (order.Patient.PatientType == "2")
+                if (order.Patient.PatientType == "2" || order.Patient.PatientType == "3")
                 {
                     if (UpdateCheckState(Common.SettingHelper.setObj, "4", obj) == -1)
                     {
@@ -2281,15 +2273,9 @@ ORDER BY P.OPERDATE DESC ";
 
                 #region 更新本地申请单状态****************
 
-                if (UpdatePatientInfoStateByApplyNo(order, "4") == -1)
-                {
-                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "更新患者状态（4）失败!" + this.ErrMsg + obj.Patient.ID);
-                    return -1;
-                }
-
                 if (UpdateApplyState(order.ID, "4") == -1)
                 {
-                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "更新检查单明细状态（4）失败!" + this.ErrMsg + obj.Patient.ID);
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "更新申请单状态（4）失败!" + this.ErrMsg + obj.Patient.ID);
                     return -1;
                 }
                 #endregion
@@ -3235,17 +3221,18 @@ where a.examid='{1}'";
 
             #region 插入平台患者信息 *****************
 
-
-
-            if (InsertPerson(order) == -1)
+            if (order.Status != "4")
             {
-                Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台患者信息失败!" + this.ErrMsg + order.Patient.ID);
-                return -1;
-            }
-            if (InsertPersonVisit(order.Patient) == -1)
-            {
-                Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台患者信息失败!" + this.ErrMsg + order.Patient.ID);
-                return -1;
+                if (InsertPerson(order) == -1)
+                {
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台患者信息失败!" + this.ErrMsg + order.Patient.ID);
+                    return -1;
+                }
+                if (InsertPersonVisit(order.Patient) == -1)
+                {
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台患者信息失败!" + this.ErrMsg + order.Patient.ID);
+                    return -1;
+                }
             }
 
             #endregion
@@ -3307,7 +3294,7 @@ where a.examid='{1}'";
             #endregion
 
             //旧系统的申请单不回传给平台
-            if (order.Patient.PatientType == "2")
+            if (order.Patient.PatientType == "2" || order.Patient.PatientType == "3")
             {
                 #region 回写状态通知平台 *****************
 
