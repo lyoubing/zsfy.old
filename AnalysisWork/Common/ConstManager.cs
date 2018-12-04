@@ -19,7 +19,6 @@ namespace NetScape.AnalysisWork.Common
             {
                 if (_ectItems == null)
                 {
-                    _ectItems = new List<AnalysisModel.Constant>();
                     _ectItems = new Constant().QueryConstant("ECGITEMS").Cast<NetScape.AnalysisModel.Constant>().ToList();
                 }
                 return _ectItems;
