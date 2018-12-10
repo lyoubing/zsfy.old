@@ -111,6 +111,10 @@ namespace NetScape.AnalysisWork.Work
                         else
                         {
                             Logger.WriteLog(_logName, "hl7文件处理失败@" + hl7FileName);
+                            var failedFolder = SettingHelper.setObj.FileDIR.TrimEnd('\\') + "\\hl7Out_failed\\";
+                            if (!Directory.Exists(failedFolder)) Directory.CreateDirectory(failedFolder);
+                            var failedFile = failedFolder + hl7FileName;
+                            File.Move(hl7File, failedFile);
                         }
                     }
                     catch (Exception ex)
