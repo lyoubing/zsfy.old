@@ -87,6 +87,7 @@ namespace NetScape.AnalysisWork.Funcs
                 {
                     msg.PatientType = "PREADT";
                     msg.PatientID = "8" + msg.PatientID;
+                    msg.VisitNumber = msg.PatientID;
                 }
 
                 msg.OrderPhys = museOrder.ReciptDoctor.Name;
@@ -1238,14 +1239,14 @@ VALUES
 '{12}',--12
 '{13}',--13
 '{14}',--14
-{15},--15
+timestamp'{15}',--15
 '{16}',--16
 '{17}',--17
 '{18}',--18
 '{19}',--19
 '{20}',--20
 '{21}',--21 BEFORE_STATUS
-{22}--effective_time
+timestamp'{22}'--effective_time
 )
 ";
             #endregion
@@ -1265,10 +1266,10 @@ VALUES
                 }
                 NetScape.AnalysisModel.Profile.DomainInfo sysDomain = this.GetDomainByCode("10");
                 NetScape.AnalysisModel.Profile.DomainInfo patientDomain = GetPatientDomain(p.PatientType);
-                info.PdfUrl = info.PdfUrl.Substring(1);
-                while (info.PdfUrl.Contains("//"))
+                info.XmlReportUrl = info.XmlReportUrl.Substring(1);
+                while (info.XmlReportUrl.Contains("//"))
                 {
-                    info.PdfUrl = info.PdfUrl.Replace("//", "/");
+                    info.XmlReportUrl = info.XmlReportUrl.Replace("//", "/");
                 }
 
                 sql = string.Format(sql, info.P_Key, //***0****/
@@ -1286,17 +1287,17 @@ VALUES
                         patientDomain.ID,
                         p.PatientType,
                         0,
-                        "sysdate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),/****15***/
+                        DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),/****15***/
                         info.XmlReportUrl,
-                       PAT_CATEGORY,// p.PatientType,
+                        p.PatientType,
                         "2.16.840.1.113883.4.487.2.1.1.1.13",/*patientDomain.ID*//****18***/
                         p.Name,
                         3,/****20 file system key***/
-                        info.ReportType,
-                        "sysdate"//DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        "XML",
+                        DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 );
 
-                Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, sql);
+                Neusoft.FrameWork.Function.HisLog.WriteLog(LogName._sql, sql);
                 if (paltMgr.ExecNoQuery(sql) == -1)
                 {
                     this.ErrMsg = paltMgr.Err;
@@ -1371,7 +1372,7 @@ VALUES(DGATE_EXTEND_ID_INFO_SEQUENCE.NextVal,
 
                 execSql = string.Format(sql, info.P_Key, info.ID, GetDomainByCode("10").ID);
                 result = paltMgr.ExecNoQuery(execSql);
-
+                Neusoft.FrameWork.Function.HisLog.WriteLog(LogName._sql, execSql);
                 if (result == -1)
                 {
                     this.ErrMsg = "插入报告文档拓展表失败！" + paltMgr.Err + "&&文档编号+主键:" + info.ID + "||" + info.P_Key + execSql;
@@ -1385,6 +1386,7 @@ VALUES(DGATE_EXTEND_ID_INFO_SEQUENCE.NextVal,
 
                 execSql = string.Format(sql, info.P_Key, p.ID, GetPatientDomain(p.PatientType).ID);
                 result = paltMgr.ExecNoQuery(execSql);
+                Neusoft.FrameWork.Function.HisLog.WriteLog(LogName._sql, execSql);
                 if (result == -1)
                 {
                     this.ErrMsg = "插入报告文档拓展表失败！" + paltMgr.Err + "&&PatientId+主键:" + p.ID + "||" + info.P_Key;
@@ -1399,6 +1401,7 @@ VALUES(DGATE_EXTEND_ID_INFO_SEQUENCE.NextVal,
                 {
                     execSql = string.Format(sql, info.P_Key, p.PID.ID, GetPatientFlowDomain(p.PatientType).ID);
                     result = paltMgr.ExecNoQuery(execSql);
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(LogName._sql, execSql);
                     if (result == -1)
                     {
                         this.ErrMsg = "插入报告文档拓展表失败！" + paltMgr.Err + "&&ClinicCode+主键:" + p.PID.ID + "||" + info.P_Key;
@@ -2128,6 +2131,7 @@ ORDER BY P.OPERDATE DESC ";
 
                 /**************************/
                 msgFile.P_Key = GetReportSeq();
+                msgFile.PdfUrl = string.Format("{0}{1}/{2}", paltPath, msgFile.P_Key, fileName);
 
                 switch (obj.Patient.Sex)
                 {
@@ -2194,10 +2198,9 @@ ORDER BY P.OPERDATE DESC ";
                     Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传报告成功!" + "|ApplyNo:|" + obj.OrderItem.ID + "|PaltUrl:|" + pathUrl);
 
                 }
-                msgFile.PdfUrl = paltPath + fileName;
                 #endregion            
 
-                #region 插入平台报告主表 *****************
+                #region 插入平台报告表 *****************
 
                 //荷载子类型： 新增/修改
                 if (order.Status == "4")
@@ -2209,48 +2212,12 @@ ORDER BY P.OPERDATE DESC ";
                     msgFile.Ext3 = "ADD";
                 }
 
-
-
-
-
                 if (InsertReport(msgFile, order.Patient, null) == -1)
                 {
                     Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台报告结果表失败!" + this.ErrMsg + obj.Patient.ID);
                     return -1;
                 }
 
-                #endregion
-
-                #region 上传XML报告 **********************
-
-                // string xmlName = msgFile.ID + ".xml";
-                // string xmlLocalPath = outPath.Replace("pdf", "xml");
-                // string xmlPathUrl = pathUrl.Replace("pdf", "xml");
-                // CreateReportXml(order, obj, xmlLocalPath);
-                // if (Common.FileHelper.TestUpload(xmlLocalPath, xmlName, Common.SettingHelper.setObj.FtpDIR, paltPath, Common.SettingHelper.setObj.FtpUser, Common.SettingHelper.setObj.FtpPwd, ref pathUrl) == -1)
-                // {
-                //     Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告失败!" + this.ErrMsg + obj.OrderItem.ID);
-                //     return -1;
-                // }
-                // else
-                // {
-                //     Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告成功!" + "|ApplyNo:|" + obj.OrderItem.ID + "|PaltUrl:|" + pathUrl);
-                // }
-
-                // msgFile.XmlReportUrl = xmlPathUrl;
-                // msgFile.XmlReportLocalUrl = xmlLocalPath;
-
-                //if(InsertReportXml(msgFile,order.Patient,null)==-1)
-                //{
-                //    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告失败!" + this.ErrMsg + xmlLocalPath+xmlPathUrl);
-                //    return -1;
-                //}
-
-                #endregion
-
-                #region 插入平台报告拓展表****************
-
-                // msgFile.Memo = order.Patient.PatientType;
                 if (InsertReportExtend(msgFile, order.Patient) == -1)
                 {
                     Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台报告结果拓展表失败!" + this.ErrMsg + obj.Patient.ID);
@@ -2259,6 +2226,13 @@ ORDER BY P.OPERDATE DESC ";
 
                 #endregion
 
+                #region 上传XML报告 **********************
+
+                var ret = UploadXml(obj, order, msgFile, outPath);
+
+                #endregion
+
+
                 #region 回写状态通知平台 *****************
                 //旧系统的申请单不回传给平台
                 if (order.Patient.PatientType == "2" || order.Patient.PatientType == "3")
@@ -2266,7 +2240,7 @@ ORDER BY P.OPERDATE DESC ";
                     if (UpdateCheckState(Common.SettingHelper.setObj, "4", obj) == -1)
                     {
                         Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "更新检查报告已发布状态（4）失败!" + this.ErrMsg + obj.Patient.ID);
-                       // return -1;
+                        // return -1;
                     }
                 }
                 #endregion
@@ -2282,7 +2256,6 @@ ORDER BY P.OPERDATE DESC ";
 
                 #region 回写pdf报告路径到本地数据库*******
 
-                msgFile.PdfUrl = pathUrl;
                 UpdateMsgFileUrl(msgFile);
 
                 #endregion
@@ -2298,6 +2271,54 @@ ORDER BY P.OPERDATE DESC ";
             catch (Exception ex)
             {
                 Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "处理心电报告失败！" + ex.Message + ex.StackTrace);
+                return -1;
+            }
+
+            return 1;
+        }
+
+        private int UploadXml(AnalysisModel.FileConent obj, AnalysisModel.Order order, AnalysisModel.EcgMsgFileInfo msgFile, string outPath)
+        {
+            try
+            {
+                string xmlName = msgFile.ID + ".xml";
+                string xmlLocalPath = outPath.Replace("pdf", "xml");
+
+                string key = GetReportSeq();
+                string paltPath = DateTime.Now.ToString("'/'yyyy'/'MM'/'dd'/'") + key + "/";
+                string xmlPathUrl = paltPath + xmlName;
+                string pathUrl = null;
+
+                CreateReportXml(order, obj, xmlLocalPath);
+
+                if (Common.FileHelper.TestUpload(xmlLocalPath, xmlName, Common.SettingHelper.setObj.FtpDIR, paltPath, Common.SettingHelper.setObj.FtpUser, Common.SettingHelper.setObj.FtpPwd, ref pathUrl) == -1)
+                {
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告失败!" + this.ErrMsg + obj.OrderItem.ID);
+                    return -1;
+                }
+                else
+                {
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告成功!" + "|ApplyNo:|" + obj.OrderItem.ID + "|PaltUrl:|" + pathUrl);
+                }
+
+                msgFile.XmlReportLocalUrl = xmlLocalPath;
+                msgFile.XmlReportUrl = xmlPathUrl;
+                msgFile.P_Key = key;
+
+                if (InsertReportXml(msgFile, order.Patient, null) == -1)
+                {
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告失败!" + this.ErrMsg + xmlLocalPath + xmlPathUrl);
+                    return -1;
+                }
+                if (InsertReportExtend(msgFile, order.Patient) == -1)
+                {
+                    Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "插入平台报告结果拓展表失败!" + this.ErrMsg + obj.Patient.ID);
+                    return -1;
+                }
+            }
+            catch (Exception ex )
+            {
+                Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "上传Xml报告失败!" + order.Patient.ID + ":" + ex.ToString());
                 return -1;
             }
 
@@ -3563,7 +3584,7 @@ and a.operdate>sysdate-30 ) ";
                  new XElement("PatientBirth", result.Patient.Birthday.ToString("yyyyMMdd")),
                  new XElement("IdentityNO", order.Patient.PID.IdenNo),
                  new XElement("Telephone", order.Patient.PhoneNumber),
-                 new XElement("ClinicalDiagnose", string.Empty),//临床诊断好像没存
+                 new XElement("ClinicalDiagnose", order.Patient.MainDiagnose),
                  new XElement("ExamineEmployee", result.DiagDoct),
                  new XElement("ExamineOn", result.CheckDate.ToString("yyyy-MM-dd HH:mm:ss")),
                  new XElement("AuditEmployee", result.DiagDoct),
