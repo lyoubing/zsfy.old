@@ -98,7 +98,10 @@ namespace NetScape.AnalysisModel.Profile
                 inf.Bold = bool.Parse(x.Attribute("bold").Value);
                 configItem.TxtInfoSet.Add(inf);
             });
-
+            if(root.Element("Frequency") != null)
+            {
+                configItem.Frequency = root.Element("Frequency").Value;
+            }
             XElement hos = root.Element("Domain").Element("HOS_DOMAIN_INFO");
             if (hos != null)
             {
@@ -465,6 +468,7 @@ namespace NetScape.AnalysisModel.Profile
             get { return _TextInfoSet; }
             set { _TextInfoSet = value; }
         }
+        public string Frequency { get; set; }
 
         private DomainInfo _hosInfo;
         /// <summary>

@@ -2970,7 +2970,8 @@ ORDER BY P.OPERDATE DESC ";
                         pdfContentByte.SetFontAndSize(bfTimes, txt1.Size);
 
                         int txtColW1 = txt1.LocationX;
-                        string note1 = "25mm/s  10mm/mV  100Hz ";
+                        string note1 = "25mm/s  10mm/mV  {0} ";
+                        note1 = !string.IsNullOrEmpty(config.Frequency) ? string.Format(note1, config.Frequency) : string.Format(note1, "100Hz");
                         pdfContentByte.ShowTextAligned(20, note1, txtColW1, txt1.LocationY, 0);
 
                         txtColW1 += txt1.RowHeight - 20;
