@@ -2228,7 +2228,7 @@ ORDER BY P.OPERDATE DESC ";
 
                 #region 上传XML报告 **********************
 
-                var ret = UploadXml(obj, order, msgFile, outPath);
+                //var ret = UploadXml(obj, order, msgFile, outPath);
 
                 #endregion
 
@@ -2646,6 +2646,12 @@ ORDER BY P.OPERDATE DESC ";
   set a.state='{1}'
   where  a.applyno='{0}'";
 
+            if(state == "4")
+            {
+                sql = @"  update ecgpatientinfo a
+  set a.state='{1}', a.reported = sysdate
+  where  a.applyno='{0}'";
+            }
             #endregion
             sql = string.Format(sql, applyNo, state);
 
@@ -3571,8 +3577,18 @@ and a.operdate>sysdate-30 ) ";
                 if (!string.IsNullOrEmpty(item))
                     diag.Add(new XElement("stm", item));
             }
+            string rv5 = string.Empty;
+            string sv1 = string.Empty;
+            if (!string.IsNullOrEmpty(result.RAmplitude))
+            {
+                decimal ra = System.Decimal.Round((Neusoft.FrameWork.Function.NConvert.ToDecimal(result.RAmplitude) / 1000), 2);
+                decimal sa = System.Decimal.Round((Neusoft.FrameWork.Function.NConvert.ToDecimal(result.SAmplitude) / 1000), 2);
+                rv5 = ra > 0 ? ra.ToString() + " mV" : "";
+                sv1 = sa > 0 ? sa.ToString() + " mV" : "";
+            }
+
             XElement root = new XElement("ECGReport",
-                new XElement("ReportII", result.Value),
+                new XElement("ReportII", order.Patient.Ext3),
                 new XElement("RequestID", result.OrderItem.ID),
                 new XElement("PatientID", result.Patient.ID),
                 new XElement("VisitNumber", result.Patient.PID.ID),
@@ -3589,7 +3605,7 @@ and a.operdate>sysdate-30 ) ";
                  new XElement("ExamineOn", result.CheckDate.ToString("yyyy-MM-dd HH:mm:ss")),
                  new XElement("AuditEmployee", result.DiagDoct),
                  new XElement("AuthorDomainId", GetDomainByCode("10").ID),
-                 new XElement("AuditOn", string.Empty),
+                 new XElement("AuditOn", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
                  new XElement("ReportOn", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
                  new XElement("ReportNo", order.Patient.Ext3),
                  new XElement("RowVersion", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
@@ -3612,10 +3628,11 @@ and a.operdate>sysdate-30 ) ";
                      new XElement("QTInterval", result.QTInt),
                      new XElement("QTCorrected", result.QTcInt),
                      new XElement("PAxis", result.PAxes + " " + result.AxesUnit),
-                      new XElement("RAxis", result.RAxes + " " + result.AxesUnit),
-                         new XElement("TAxis", result.TAxes + " " + result.AxesUnit)
+                     new XElement("RAxis", result.RAxes + " " + result.AxesUnit),
+                     new XElement("TAxis", result.TAxes + " " + result.AxesUnit),
+                     new XElement("RV5", rv5),
+                     new XElement("SV1", sv1)
                      ),
-                //new XElement("ReportConclusion"),
                  new XElement("IfOtherHospital", "0"),
                  new XElement("OtherHospitalName", "广州中山大学附属第一医院")
                 );

@@ -213,6 +213,9 @@ namespace Analysis.Service.Inpatient
                 Order order = pair.Value;
                 string orderXml = pair.Key;
 
+                //避免重复插入
+                if (func.ApplyNoExists(order.ID)) continue;
+
                 if (palt.ExecApplyResult(order, orderXml) == -1)
                 {
                     Neusoft.FrameWork.Function.HisLog.WriteLog(_log, palt.errMsg);
