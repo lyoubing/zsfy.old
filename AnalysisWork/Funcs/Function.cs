@@ -1047,7 +1047,7 @@ timestamp'{21}',--22
             if (type == "2")
                 dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "2").FirstOrDefault();
             if (type == "3")
-                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "6").FirstOrDefault();
+                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "8").FirstOrDefault();
 
             return dInfo;
         }
@@ -1060,7 +1060,7 @@ timestamp'{21}',--22
             if (type == "2")
                 dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "5").FirstOrDefault();
             if (type == "3")
-                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "7").FirstOrDefault();
+                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "9").FirstOrDefault();
 
             return dInfo;
         }
@@ -2228,7 +2228,7 @@ ORDER BY P.OPERDATE DESC ";
 
                 #region 上传XML报告 **********************
 
-                //var ret = UploadXml(obj, order, msgFile, outPath);
+                var ret = UploadXml(obj, order, msgFile, outPath);
 
                 #endregion
 
