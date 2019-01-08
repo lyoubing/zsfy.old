@@ -1293,7 +1293,7 @@ timestamp'{22}'--effective_time
                         "2.16.840.1.113883.4.487.2.1.1.1.13",/*patientDomain.ID*//****18***/
                         p.Name,
                         3,/****20 file system key***/
-                        "XML",
+                        0,
                         DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 );
 
