@@ -1047,7 +1047,7 @@ timestamp'{21}',--22
             if (type == "2")
                 dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "2").FirstOrDefault();
             if (type == "3")
-                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "8").FirstOrDefault();
+                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "6").FirstOrDefault();
 
             return dInfo;
         }
@@ -1060,7 +1060,7 @@ timestamp'{21}',--22
             if (type == "2")
                 dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "5").FirstOrDefault();
             if (type == "3")
-                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "9").FirstOrDefault();
+                dInfo = NetScape.AnalysisModel.Profile.ConfigSetting.DomainInfo.Where(x => x.Code == "7").FirstOrDefault();
 
             return dInfo;
         }
