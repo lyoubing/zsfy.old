@@ -21,7 +21,7 @@ namespace NetScape.AnalysisModel
 
         private DateTime applyDate;
 
-        private string applyTime;
+        private DateTime applyTime = DateTime.Now;
 
         private string recipeNO;
 
@@ -201,7 +201,7 @@ namespace NetScape.AnalysisModel
             set { isUrgent = value; }
         }
 
-        public string ApplyTime
+        public DateTime ApplyTime
         {
             get { return applyTime; }
             set { applyTime = value; }

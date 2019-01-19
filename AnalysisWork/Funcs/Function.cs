@@ -15,6 +15,7 @@ using System.Drawing.Design;
 using System.Drawing.Imaging;
 using System.Drawing;
 using iTextSharp.text;
+using System.Data.OracleClient;
 
 namespace NetScape.AnalysisWork.Funcs
 {
@@ -63,7 +64,7 @@ namespace NetScape.AnalysisWork.Funcs
 
                 msg.Bed = museOrder.Patient.BedNO;
                 msg.HisOrderType = orderItem.Item.ID;
-                msg.OrderDateTime = orderItem.OperDate;// museOrder.ApplyDate;
+                msg.OrderDateTime = museOrder.ApplyTime;// museOrder.ApplyDate;
 
                 //string OrderNO = item.ApplyNo; //item.ID + "-" + item.OrderID;
                 //msg.OrderNumber = item.ApplyNo;
@@ -376,7 +377,7 @@ TO_DATE('{18}','yyyy-mm-dd hh24:mi:ss'),--19
             {
                 //NetScape.AnalysisModel.PatientInfo info = order.Patient;
                 sql = string.Format(sql, "EcgPatientSequence.Nextval", order.Patient.ID, order.Patient.PID.CardNO, order.Patient.PID.ID, order.Patient.IDCard, order.Patient.PID.IdenNo, order.Patient.Name, string.Empty, string.Empty, order.Patient.Sex, order.Patient.Birthday,//11
-                    order.Patient.PhoneNumber, order.Patient.PhoneNumber, order.Patient.Address, order.Patient.PatientType, order.Patient.Nation, order.Patient.Nation, "009999", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),//19
+                    order.Patient.PhoneNumber, order.Patient.PhoneNumber, order.Patient.Address, order.Patient.PatientType, order.Patient.Nation, order.Patient.Nation, "009999", order.ApplyTime.ToString("yyyy-MM-dd HH:mm:ss"),//19
                     order.Patient.Mark, order.Patient.Ext1, order.Patient.Ext2, order.Patient.Value, order.Status, order.FeeState, order.ID);//24
                 Neusoft.FrameWork.Function.HisLog.WriteLog(LogName._sql, sql);
                 if (dataMgr.ExecNoQuery(sql) == -1)
@@ -1585,7 +1586,7 @@ AND P.OPERDATE >SYSDATE -30 ";
                     patient.Nation = dataMgr.Reader[15].ToString(); /*COUNTRY[] */
                     patient.Nation = dataMgr.Reader[16].ToString(); /*NATION[] */
                     //=dataMgr.Reader[17].ToString(); /*OPERCODE[] */
-                    //=dataMgr.Reader[18].ToString(); /*OPERDATE[] */
+                    order.ApplyTime = Neusoft.FrameWork.Function.NConvert.ToDateTime(dataMgr.Reader[18].ToString()); /*OPERDATE[] */
                     patient.Mark = dataMgr.Reader[19].ToString(); /*MARK[] */
                     patient.Ext1 = dataMgr.Reader[20].ToString(); /*EXT1[] */
                     patient.Ext2 = dataMgr.Reader[21].ToString(); /*EXT2[] */
@@ -2022,6 +2023,7 @@ ORDER BY P.OPERDATE DESC ";
                     Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, "没有找到匹配的患者信息!" + obj.Patient.ID);
                     return -1;
                 }
+                
                 #endregion
 
                 #region 获取消息内容**********************
@@ -2804,64 +2806,136 @@ ORDER BY P.OPERDATE DESC ";
                     #endregion
 
                     //第一组信息
-                    #region 第一组信息
-                    //Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, obj.Patient.ID);
-                    pdfContentByte.BeginText();
+                    if (obj.Patient.PatientType == "3")
                     {
-                        TxtInfo txt1 = config.TxtInfoSet.Where(x => x.ID == "Txt1").FirstOrDefault();
-                        pdfContentByte.SetFontAndSize(bfTimes, txt1.Size);
-                        int txtRowH1 = txt1.LocationY;
-                        int txtRowH2 = txt1.LocationY;
-
-                        string xx = "患者编号：";
-                        pdfContentByte.ShowTextAligned(30, xx, txt1.LocationX, txtRowH1, 0);
-                        txtRowH1 -= txt1.RowHeight;
-
-                        pdfContentByte.ShowTextAligned(30, "患者姓名：" /*+ obj.Patient.Name*/, txt1.LocationX, txtRowH1, 0);
-                        txtRowH1 -= txt1.RowHeight;
-                        NetScape.AnalysisModel.Base.Sex s = NetScape.AnalysisModel.Base.Sex.GetSex(obj.Patient.Sex);
-                        // if (s != null)
-
-                        string sex = s.Name;
-                        pdfContentByte.ShowTextAligned(30, "性    别：" /*+ sex*/, txt1.LocationX, txtRowH1, 0);
-
-                        string birthDay = string.Empty, age = string.Empty;
-                        if (obj.Patient.Birthday > DateTime.MinValue)
+                        #region 第一组信息
+                        //Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, obj.Patient.ID);
+                        pdfContentByte.BeginText();
                         {
-                            birthDay = obj.Patient.Birthday.ToShortDateString();
-                            age = GetAge(obj.Patient.Birthday);
+                            TxtInfo txt1 = config.TxtInfoSet.Where(x => x.ID == "Txt1").FirstOrDefault();
+                            pdfContentByte.SetFontAndSize(bfTimes, txt1.Size);
+                            int txtRowH1 = txt1.LocationY;
+                            int txtRowH2 = txt1.LocationY;
+
+                            string xx = "体检编号：";
+                            pdfContentByte.ShowTextAligned(30, xx, txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+
+                            pdfContentByte.ShowTextAligned(30, "申请时间：" /*+ obj.Patient.Name*/, txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+
+                            pdfContentByte.ShowTextAligned(30, "姓    名：" /*+ obj.Patient.Name*/, txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+
+                            NetScape.AnalysisModel.Base.Sex s = NetScape.AnalysisModel.Base.Sex.GetSex(obj.Patient.Sex);
+                            string sex = s.Name;
+                            pdfContentByte.ShowTextAligned(30, "性    别：" /*+ sex*/, txt1.LocationX, txtRowH1, 0);
+
+                            string birthDay = string.Empty, age = string.Empty;
+                            if (obj.Patient.Birthday > DateTime.MinValue)
+                            {
+                                birthDay = obj.Patient.Birthday.ToShortDateString();
+                                age = GetAge(obj.Patient.Birthday);
+                            }
+                            txtRowH1 -= txt1.RowHeight;
+                            //pdfContentByte.ShowTextAligned(30, "出生日期：" +birthDay , txt1.LocationX, txtRowH1, 0);
+                            pdfContentByte.ShowTextAligned(30, "年    龄：", txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, "序    号：" /*+ obj.Patient.Dept.Name*/, txt1.LocationX, txtRowH1, 0);
+
+                            //赋值
+
+                            pdfContentByte.SetFontAndSize(bfsong, txt1.Size);
+                            int lx = txt1.LocationX + 60;
+                            txtRowH1 = txt1.LocationY;
+                            pdfContentByte.ShowTextAligned(30, obj.Patient.ID, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            string applyTime = string.Empty;
+                            if (obj.ApplyTime.HasValue)
+                            {
+                                applyTime = obj.ApplyTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+                            pdfContentByte.ShowTextAligned(30, applyTime, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, obj.Patient.Name, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, sex, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, age, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            string sequence = string.Format("{0} ({1})", obj.TJSequence, obj.Patient.Mark);
+                            pdfContentByte.ShowTextAligned(30, sequence, lx, txtRowH1, 0);
+
                         }
-                        txtRowH1 -= txt1.RowHeight;
-                        //pdfContentByte.ShowTextAligned(30, "出生日期：" +birthDay , txt1.LocationX, txtRowH1, 0);
-                        pdfContentByte.ShowTextAligned(30, "年    龄：", txt1.LocationX, txtRowH1, 0);
-                        txtRowH1 -= txt1.RowHeight;
-                        pdfContentByte.ShowTextAligned(30, "科    室：" /*+ obj.Patient.Dept.Name*/, txt1.LocationX, txtRowH1, 0);
 
-                        //赋值
-
-                        pdfContentByte.SetFontAndSize(bfsong, txt1.Size);
-                        int lx = txt1.LocationX + 60;
-                        txtRowH1 = txt1.LocationY;
-                        pdfContentByte.ShowTextAligned(30, obj.Patient.ID, lx, txtRowH1, 0);
-
-                        txtRowH1 -= txt1.RowHeight;
-                        pdfContentByte.ShowTextAligned(30, obj.Patient.Name, lx, txtRowH1, 0);
-
-                        txtRowH1 -= txt1.RowHeight;
-                        pdfContentByte.ShowTextAligned(30, sex, lx, txtRowH1, 0);
-
-                        txtRowH1 -= txt1.RowHeight;
-                        pdfContentByte.ShowTextAligned(30, age, lx, txtRowH1, 0);
-
-                        txtRowH1 -= txt1.RowHeight;
-                        string dept = obj.Patient.Dept.Name;
-                        if (!string.IsNullOrEmpty(obj.Patient.BedNO))
-                            dept += obj.Patient.BedNO + "床";
-                        pdfContentByte.ShowTextAligned(30, dept, lx, txtRowH1, 0);
-
+                        #endregion
                     }
+                    else
+                    {
+                        #region 第一组信息
+                        //Neusoft.FrameWork.Function.HisLog.WriteLog(_logName, obj.Patient.ID);
+                        pdfContentByte.BeginText();
+                        {
+                            TxtInfo txt1 = config.TxtInfoSet.Where(x => x.ID == "Txt1").FirstOrDefault();
+                            pdfContentByte.SetFontAndSize(bfTimes, txt1.Size);
+                            int txtRowH1 = txt1.LocationY;
+                            int txtRowH2 = txt1.LocationY;
 
-                    #endregion
+                            string xx = "患者编号：";
+                            pdfContentByte.ShowTextAligned(30, xx, txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+
+                            pdfContentByte.ShowTextAligned(30, "患者姓名：" /*+ obj.Patient.Name*/, txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+                            NetScape.AnalysisModel.Base.Sex s = NetScape.AnalysisModel.Base.Sex.GetSex(obj.Patient.Sex);
+                            // if (s != null)
+
+                            string sex = s.Name;
+                            pdfContentByte.ShowTextAligned(30, "性    别：" /*+ sex*/, txt1.LocationX, txtRowH1, 0);
+
+                            string birthDay = string.Empty, age = string.Empty;
+                            if (obj.Patient.Birthday > DateTime.MinValue)
+                            {
+                                birthDay = obj.Patient.Birthday.ToShortDateString();
+                                age = GetAge(obj.Patient.Birthday);
+                            }
+                            txtRowH1 -= txt1.RowHeight;
+                            //pdfContentByte.ShowTextAligned(30, "出生日期：" +birthDay , txt1.LocationX, txtRowH1, 0);
+                            pdfContentByte.ShowTextAligned(30, "年    龄：", txt1.LocationX, txtRowH1, 0);
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, "科    室：" /*+ obj.Patient.Dept.Name*/, txt1.LocationX, txtRowH1, 0);
+
+                            //赋值
+
+                            pdfContentByte.SetFontAndSize(bfsong, txt1.Size);
+                            int lx = txt1.LocationX + 60;
+                            txtRowH1 = txt1.LocationY;
+                            pdfContentByte.ShowTextAligned(30, obj.Patient.ID, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, obj.Patient.Name, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, sex, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            pdfContentByte.ShowTextAligned(30, age, lx, txtRowH1, 0);
+
+                            txtRowH1 -= txt1.RowHeight;
+                            string dept = obj.Patient.Dept.Name;
+                            if (!string.IsNullOrEmpty(obj.Patient.BedNO))
+                                dept += obj.Patient.BedNO + "床";
+                            pdfContentByte.ShowTextAligned(30, dept, lx, txtRowH1, 0);
+
+                        }
+
+                        #endregion
+                    }
 
                     #region   第2组信息
 
@@ -2983,7 +3057,7 @@ ORDER BY P.OPERDATE DESC ";
                         {
                             checkDate = obj.CheckDate.ToString("yyyy-MM-dd HH:mm:ss");
                         }
-                        pdfContentByte.ShowTextAligned(20, "检查时间：" + obj.CheckDate, txtColW1, txt1.LocationY, 0);
+                        pdfContentByte.ShowTextAligned(20, "检查时间：" + checkDate, txtColW1, txt1.LocationY, 0);
 
                         txtColW1 += txt1.RowHeight + 20;
                         string diagDate = string.Empty;
@@ -3034,10 +3108,35 @@ ORDER BY P.OPERDATE DESC ";
             return 1;
         }
 
+        public void HandleTJinfo(NetScape.AnalysisModel.FileConent obj)
+        {
+            if (obj.Patient.PatientType == "3" && !string.IsNullOrEmpty(obj.OrderItem.ID))
+            {
+                NetScape.AnalysisModel.Order order = QueryOrderByApplyNo(obj.OrderItem.ID);
+                obj.ApplyTime = order.ApplyTime;
+                obj.Patient.Mark = order.Patient.Mark;
+
+                using (OracleConnection conn = new OracleConnection())
+                {
+                    conn.ConnectionString = "data source=HIS;password=zsymns;user id=mns";
+                    conn.Open();
+                    using (OracleCommand command = conn.CreateCommand())
+                    {
+                        command.CommandText = string.Format("select v.OrderNo from zshis.v_Met_Chk_Apply v where  v.hissheetid='{0}'", obj.OrderItem.ID);
+                        var reader = command.ExecuteReader();
+                        if(reader.Read())
+                        {
+                            obj.TJSequence = reader[0].ToString();
+                        }
+                    }
+                }
+            }
+        }
         public int ResetPdtFormat(NetScape.AnalysisModel.FileConent obj, string path, string outPath)
         {
             try
             {
+                HandleTJinfo(obj);
 
                 //加一个临时目录存放中间文件
                 string temp_path = AppDomain.CurrentDomain.BaseDirectory + "\\pdf_temp\\";// + System.IO.Path.GetFileNameWithoutExtension(path) + ".pdf";

@@ -41,6 +41,9 @@ namespace NetScape.AnalysisModel
             set { orderItem = value; }
         }
 
+        public DateTime? ApplyTime { get; set; }
+        public string TJSequence { get; set; }
+
         private string webURL;
 
         public string WEBURL

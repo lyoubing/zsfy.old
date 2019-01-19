@@ -1638,6 +1638,16 @@ namespace NetScape.AnalysisWork.Work
                     order.FeeState = node.Element("PAYRESULT").Value.Trim();
                 if (string.IsNullOrEmpty(order.FeeState))
                     order.FeeState = "1";
+
+                if (node.Element("ReqSheetDate") != null && node.Element("ReqSheetTime") != null)
+                    order.ApplyTime = Funcs.Function.ConvertToDateTime(node.Element("ReqSheetDate").Value.Trim() + node.Element("ReqSheetTime").Value.Trim());
+
+                if (node.Element("IsEmergent") != null && order.Patient.PatientType == "3")
+                {
+                    var em = node.Element("IsEmergent").Value.Trim();
+                    if (em == "1") order.Patient.Mark = "个人";
+                    else if(em == "2") order.Patient.Mark = "团体";
+                }
                 List<XElement> itemList = node.Element("ExamList").Elements("Exam").ToList();
                 List<XElement> FeeList = node.Element("FeeList").Elements("Fee").ToList();
                 alOrderItems = new List<OrderItem>();
@@ -1658,9 +1668,6 @@ namespace NetScape.AnalysisWork.Work
                         //item.TotCost = NetScape.AnalysisToolKit.NConvert.ToDecimal(nd.Element("charges").Value.Trim());
                         if (nd.Element("ExamID") != null)
                             item.CheckID = nd.Element("ExamID").Value.Trim();
-
-                        if (node.Element("ReqSheetDate") != null && node.Element("ReqSheetTime") != null)
-                            item.OperDate = Funcs.Function.ConvertToDateTime(node.Element("ReqSheetDate").Value.Trim() + node.Element("ReqSheetTime").Value.Trim());
 
                         if (node.Element("DepartMentID") != null)
                             item.ApplyDept.ID = node.Element("DepartMentID").Value.Trim();

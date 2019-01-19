@@ -179,7 +179,7 @@ namespace NetScape.AnalysisWork.Work
                             {
                                 patient.PatientType = "2";
                             }
-                            else if (str[2].ToString() == "PREADE")
+                            else if (str[2].ToString() == "PREADT")
                             {
                                 patient.PatientType = "3";
                                 if (patient.ID.Length > 10 && patient.ID.Substring(0, 1) == "8")
