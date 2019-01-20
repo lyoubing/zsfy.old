@@ -2869,7 +2869,9 @@ ORDER BY P.OPERDATE DESC ";
 
                             txtRowH1 -= txt1.RowHeight;
                             string sequence = string.Format("{0} ({1})", obj.TJSequence, obj.Patient.Mark);
-                            pdfContentByte.ShowTextAligned(30, sequence, lx, txtRowH1, 0);
+                            var bfont = new iTextSharp.text.Font(bfTimes, 12, iTextSharp.text.Font.BOLD);
+                            Phrase pbold = new Phrase(sequence, bfont);
+                            ColumnText.ShowTextAligned(pdfContentByte, Element.ALIGN_LEFT, pbold, lx, txtRowH1, 0);
 
                         }
 
